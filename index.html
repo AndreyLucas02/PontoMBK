@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ponto Online - MBK</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      margin: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .controls-container {
+        max-width: 320px;
+        margin: 0 auto 20px auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #34495e;
+    }
+    select {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: border-color 0.3s ease;
+    }
+    select:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 8px #2980b9;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      font-size: 11px;
+      user-select: none;
+    }
+    thead {
+      background: linear-gradient(90deg, #2980b9 0%, #3498db 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 4px 6px;
+      border: 1px solid black;
+      text-align: center;
+    }
+    th:first-child, td.nome-funcionario {
+      text-align: left;
+      width: 220px;
+      cursor: pointer;
+      font-weight: 700;
+      color: #2980b9;
+      user-select: text;
+      border-right: 3px solid #2980b9; 
+      white-space: normal;
+      word-wrap: break-word;
+      background: #ecf0f1;
+      transition: background-color 0.2s ease;
+    }
+    td.nome-funcionario:hover {
+      background-color: #d6eaf8;
+      color: #1b4f72;
+    }
+    td.marcado {
+      background-color: #27ae60;
+      color: white;
+      font-weight: 600;
+    }
+    td.folga-fixa, td.folga {
+      background-color: #95a5a6;
+      color: white;
+      font-weight: 700;
+    }
+    td.atestado {
+      background-color: #f1c40f;
+      color: #222;
+      font-weight: 600;
+    }
+    td.falta {
+      background-color: #c0392b;
+      color: white;
+      font-weight: 600;
+    }
+    td.linha-destaque {
+      background-color: #d6eaf8;
+      font-weight: 600;
+    }
+    select.folga-box {
+      margin-top: 3px;
+      font-size: 10px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1px solid #bbb;
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.3s ease;
+    }
+    select.folga-box:hover, select.folga-box:focus {
+      border-color: #2980b9;
+      outline: none;
+    }
+    input[type=checkbox] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    input[type=checkbox]:hover {
+      transform: scale(1.2);
+    }
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal {
+      background: white;
+      border-radius: 12px;
+      padding: 24px 32px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      position: relative;
+      font-size: 14px;
+      color: #2c3e50;
+    }
+    .modal h3 {
+      margin-top: 0;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .modal label {
+      display: block;
+      margin: 10px 0 6px 0;
+      font-weight: 600;
+      color: #34495e;
+    }
+    .modal input[type="text"], .modal input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+    }
+    .modal input[type="text"]:focus, .modal input[type="number"]:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 8px #2980b9;
+    }
+    .modal .btn-group {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .modal button {
+      background: #2980b9;
+      color: white;
+      font-weight: 700;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin: 0 10px;
+      min-width: 100px;
+    }
+    .modal button:hover {
+      background-color: #1c5980;
+    }
+    .modal .btn-cancel {
+      background: #bbb;
+      color: #444;
+    }
+    .modal .btn-cancel:hover {
+      background: #999;
+    }
+
+    /* New styles for employee management section */
+    .employee-management {
+      max-width: 600px;
+      margin: 40px auto 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .employee-management h3 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .employee-management input[type="text"] {
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      width: calc(100% - 120px); /* Adjust width for button */
+      max-width: 250px;
+      margin-right: 10px;
+    }
+    .employee-management button {
+      background: #28a745; /* Green for add */
+      color: white;
+      font-weight: 600;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .employee-management button:hover {
+      background-color: #218838;
+    }
+    .employee-management .remove-section {
+      margin-top: 20px;
+    }
+    .employee-management .remove-section select {
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      width: calc(100% - 120px); /* Adjust width for button */
+      max-width: 250px;
+      margin-right: 10px;
+    }
+    .employee-management .remove-section button {
+      background: #dc3545; /* Red for remove */
+    }
+    .employee-management .remove-section button:hover {
+      background-color: #c82333;
+    }
+    .export-button-container {
+      max-width: 1200px;
+      margin: 20px auto;
+      text-align: right;
+    }
+    .export-button-container button {
+      background: #007bff; /* Blue for export */
+      color: white;
+      font-weight: 700;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .export-button-container button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Toast Notification Styles */
+    #toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050; /* Above modals */
+    }
+    .toast {
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      transform: translateX(100%);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      min-width: 200px;
+      text-align: center;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .toast.success {
+      background-color: #28a745; /* Green */
+    }
+    .toast.error {
+      background-color: #dc3545; /* Red */
+    }
+    .toast.info {
+      background-color: #17a2b8; /* Blue-ish */
+    }
+    /* Estilos para ocultar/mostrar elementos */
+    .hidden {
+        display: none !important;
+    }
+  </style>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<h2 id="currentTurnTitle">MBK 3º Turno 21:00 às 06:00</h2>
+
+<div class="controls-container">
+    <label for="turnoSelect">Escolha o Turno:</label>
+    <select id="turnoSelect">
+        <option value="MBK1">MBK 1º Turno 06:00 às 15:00</option>
+        <option value="MBK2">MBK 2º Turno 14:00 às 23:00</option>
+        <option value="MBK3">MBK 3º Turno 21:00 às 06:00</option>
+    </select>
+
+    <label for="periodo">Escolha o Período:</label>
+    <select id="periodo"></select>
+</div>
+
+<div class="export-button-container">
+    <button id="exportExcel">Exportar para Excel</button>
+</div>
+
+<table id="tabela">
+  <thead>
+    <tr>
+      <th>Funcionário</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h3 id="modalTitle">Dados do Funcionário</h3>
+    <form id="modalForm">
+      <label for="pixKey">Chave PIX</label>
+      <input type="text" id="pixKey" name="pixKey" placeholder="Digite a chave PIX" autocomplete="off" required />
+
+      <label for="bankName">Banco</label>
+      <input type="text" id="bankName" name="bankName" placeholder="Digite o banco" autocomplete="off" required />
+
+      <label for="totalValue">Valor Total a pagar (R$)</label>
+      <input type="number" id="totalValue" name="totalValue" min="0" step="0.01" placeholder="0,00" required />
+
+      <div class="btn-group">
+        <button type="submit" id="btnSave">Salvar</button>
+        <button type="button" class="btn-cancel" id="btnCancel">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="employee-management">
+  <h3>Gerenciar Funcionários do Turno <span id="currentManageTurn"></span></h3>
+  <div>
+    <input type="text" id="novoFuncionarioNome" placeholder="Nome do novo funcionário" />
+    <button id="addFuncionario">Adicionar Funcionário</button>
+  </div>
+  <div class="remove-section">
+    <select id="removerFuncionarioSelect">
+      </select>
+    <button id="removeFuncionario">Remover Funcionário</button>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+  // Chave base para o estado de ponto de cada período
+  const PONTO_ESTADO_PREFIX = 'pontoEstado_';
+  // Chave para os dados de PIX/Banco (globais por funcionário)
+  const DADOS_FUNCIONARIO_MODAL_PREFIX = 'dadosFuncionarioModal_';
+
+  // --- Listas de funcionários padrão para cada turno ---
+  const defaultFuncionariosPorTurno = {
+    'MBK1': ['Funcionário A1', 'Funcionário B1', 'Funcionário C1'],
+    'MBK2': ['Funcionário D2', 'Funcionário E2', 'Funcionário F2'],
+    'MBK3': [
+      'Anderson G Pinto', 'Anderson P dos Santos', 'Andrey Lucas Barbosa Uchôa', 'Guilherme', 'Luis Augusto', 
+      'Nickson José Gote', 'Davi da S Souza', 'Wildy Vinicius', 'Vitor', '10'
+    ]
+  };
+
+  // Elemento para exibir as notificações toast
+  const toastContainer = document.getElementById('toast-container');
+
+  // Função para exibir notificações toast
+  function showToast(message, type = 'info', duration = 3000) {
+    const toast = document.createElement('div');
+    toast.classList.add('toast', type);
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+
+    // Animação de entrada
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 10);
+
+    // Animação de saída e remoção
+    setTimeout(() => {
+      toast.classList.remove('show');
+      toast.addEventListener('transitionend', () => toast.remove());
+    }, duration);
+  }
+
+  // Gera opções de período de 14 em 14 dias, começando segunda-feira
+  function gerarPeriodos() {
+    const select = document.getElementById('periodo');
+    select.innerHTML = ''; // Limpa opções existentes
+    const dataInicioOficial = new Date(2025, 5, 9); // 09/06/2025 (segunda-feira)
+    const dataFim = new Date(2026, 0, 31); // Estendido para garantir mais períodos
+    let i = 1;
+    let dataAtual = new Date(dataInicioOficial);
+
+    while (dataAtual <= dataFim) {
+      const dataFinal = new Date(dataAtual);
+      dataFinal.setDate(dataAtual.getDate() + 13); // 14 dias depois
+
+      // Garante que o período não ultrapasse a data limite
+      if (dataAtual > dataFim) break;
+
+      const label = `Semana ${i} (${dataAtual.toLocaleDateString('pt-BR')} a ${dataFinal.toLocaleDateString('pt-BR')})`;
+      const option = document.createElement('option');
+      option.value = `semana${i}`;
+      option.textContent = label;
+      select.appendChild(option);
+      
+      dataAtual.setDate(dataAtual.getDate() + 14); // Avança 14 dias para o próximo período
+      i++;
+    }
+  }
+
+  // Calcula datas de 14 dias para semana selecionada
+  function calcularDatasSemana(semana) {
+    const dataInicioOficial = new Date(2025, 5, 9); // 09/06/2025 (segunda-feira)
+    const semanaNum = parseInt(semana.replace('semana', ''));
+    const inicio = new Date(dataInicioOficial.getTime() + (semanaNum - 1) * 14 * 24 * 60 * 60 * 1000);
+    let datas = [];
+    for (let i = 0; i < 14; i++) {
+      const dia = new Date(inicio);
+      dia.setDate(inicio.getDate() + i);
+      datas.push(dia);
+    }
+    return datas;
+  }
+
+  // Formata data com dia da semana abreviado e DD/MM
+  function formatarData(data) {
+    const diaSemana = data.toLocaleDateString('pt-BR', { weekday: 'short' });
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0'); // Mês é 0-indexed
+    return `${diaSemana} ${dia}/${mes}`;
+  }
+
+  const tabela = document.getElementById('tabela');
+  const periodoSelect = document.getElementById('periodo');
+  const turnoSelect = document.getElementById('turnoSelect'); // Novo elemento
+  const currentTurnTitle = document.getElementById('currentTurnTitle'); // Título do turno
+  const currentManageTurn = document.getElementById('currentManageTurn'); // Título do gerenciamento
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalForm = document.getElementById('modalForm');
+  const pixKeyInput = document.getElementById('pixKey');
+  const bankNameInput = document.getElementById('bankName');
+  const totalValueInput = document.getElementById('totalValue');
+  let funcionarioModalNome = null;
+  let periodoAtual = null;
+  let turnoAtual = null; // Variável para o turno atual
+
+  // Elementos da nova seção de gerenciamento de funcionários
+  const novoFuncionarioNomeInput = document.getElementById('novoFuncionarioNome');
+  const addFuncionarioBtn = document.getElementById('addFuncionario');
+  const removerFuncionarioSelect = document.getElementById('removerFuncionarioSelect');
+  const removeFuncionarioBtn = document.getElementById('removeFuncionario');
+  const exportExcelBtn = document.getElementById('exportExcel');
+
+  // --- Funções para carregar/salvar estado (agora com TURNO) ---
+  function getPontoEstadoKey(turno, semana) {
+      return `${PONTO_ESTADO_PREFIX}${turno}_${semana}`;
+  }
+
+  function getDadosFuncionarioModalKey(turno) {
+      // Dados de PIX/Banco são por funcionário E por turno, pois os funcionários mudam por turno.
+      return `${DADOS_FUNCIONARIO_MODAL_PREFIX}${turno}`;
+  }
+
+  // Função para carregar o estado completo de uma semana específica E turno
+  function carregarEstadoSemana(turno, semana) {
+    const storedState = localStorage.getItem(getPontoEstadoKey(turno, semana));
+    if (storedState) {
+        return JSON.parse(storedState);
+    }
+    
+    const semanaNum = parseInt(semana.replace('semana', ''));
+    let funcionariosParaNovaSemana = [...(defaultFuncionariosPorTurno[turno] || [])];
+
+    // Se for a primeira semana, usa a lista padrão do turno
+    // Se não for a primeira semana, tenta carregar a lista de funcionários da semana anterior do MESMO turno
+    if (semanaNum > 1) {
+        const semanaAnteriorChave = `semana${semanaNum - 1}`;
+        const estadoSemanaAnterior = JSON.parse(localStorage.getItem(getPontoEstadoKey(turno, semanaAnteriorChave)));
+        if (estadoSemanaAnterior && estadoSemanaAnterior.funcionarios) {
+            funcionariosParaNovaSemana = [...estadoSemanaAnterior.funcionarios];
+        }
+    }
+      
+    const initialState = {
+      funcionarios: funcionariosParaNovaSemana,
+      pontos: {} // { "nomeFuncionario_diaIndex": true/false, "nomeFuncionario_diaIndex_tipo": "Folga" }
+    };
+    salvarEstadoSemana(turno, semana, initialState);
+    return initialState;
+  }
+
+  // Função para salvar o estado completo de uma semana específica E turno
+  function salvarEstadoSemana(turno, semana, estado) {
+    localStorage.setItem(getPontoEstadoKey(turno, semana), JSON.stringify(estado));
+  }
+
+  // Funções para carregar/salvar dados de PIX/Banco (globais por funcionário, agora por TURNO)
+  function carregarDadosFuncionarioModal(turno, nomeFuncionario) {
+    const dadosGeraisDoTurno = JSON.parse(localStorage.getItem(getDadosFuncionarioModalKey(turno))) || {};
+    return dadosGeraisDoTurno[nomeFuncionario] || { pixKey: '', bankName: '', totalValue: '' };
+  }
+
+  function salvarDadosFuncionarioModal(turno, nomeFuncionario, dados) {
+    const armazenadosGeraisDoTurno = JSON.parse(localStorage.getItem(getDadosFuncionarioModalKey(turno))) || {};
+    armazenadosGeraisDoTurno[nomeFuncionario] = dados;
+    localStorage.setItem(getDadosFuncionarioModalKey(turno), JSON.stringify(armazenadosGeraisDoTurno));
+  }
+  
+  // Função para remover os dados do modal de um funcionário para o turno atual
+  function removerDadosFuncionarioModal(turno, nomeFuncionario) {
+      const armazenadosGeraisDoTurno = JSON.parse(localStorage.getItem(getDadosFuncionarioModalKey(turno))) || {};
+      delete armazenadosGeraisDoTurno[nomeFuncionario];
+      localStorage.setItem(getDadosFuncionarioModalKey(turno), JSON.stringify(armazenadosGeraisDoTurno));
+  }
+
+  function atualizarTabela() {
+    turnoAtual = turnoSelect.value; // Pega o turno selecionado
+    periodoAtual = periodoSelect.value; // Pega o período selecionado
+
+    // Atualiza o título principal e o título da seção de gerenciamento
+    currentTurnTitle.textContent = turnoSelect.options[turnoSelect.selectedIndex].text;
+    currentManageTurn.textContent = turnoSelect.options[turnoSelect.selectedIndex].text.replace(/MBK (\dº) Turno.*$/, '$1º Turno');
+
+    const datas = calcularDatasSemana(periodoAtual);
+    const estadoAtualSemana = carregarEstadoSemana(turnoAtual, periodoAtual); // AGORA PASSA O TURNO
+    const funcionariosDestaSemana = estadoAtualSemana.funcionarios;
+    const pontosDestaSemana = estadoAtualSemana.pontos;
+
+    // Cabeçalho
+    const thead = tabela.querySelector('thead tr');
+    thead.innerHTML = '<th>Funcionário</th>';
+    datas.forEach((data, i) => {
+      const th = document.createElement('th');
+      th.textContent = formatarData(data);
+      // Destaca os dias de Segunda a Sexta (1 a 5)
+      if (data.getDay() >= 1 && data.getDay() <= 5) th.classList.add('linha-destaque'); 
+      thead.appendChild(th);
+    });
+    const thFinal = document.createElement('th');
+    thFinal.textContent = 'Valor a se pagar';
+    thead.appendChild(thFinal);
+
+    const tbody = tabela.querySelector('tbody');
+    tbody.innerHTML = '';
+
+    funcionariosDestaSemana.forEach((nomeFuncionario) => {
+      const tr = document.createElement('tr');
+      const tdNome = document.createElement('td');
+      tdNome.textContent = nomeFuncionario;
+      tdNome.className = 'nome-funcionario';
+      tdNome.title = 'Clique para adicionar dados PIX e Banco';
+      tdNome.tabIndex = 0;
+      tdNome.setAttribute('role', 'button');
+      tdNome.setAttribute('aria-pressed', 'false');
+      tdNome.addEventListener('click', () => abrirModal(nomeFuncionario));
+      tdNome.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          abrirModal(nomeFuncionario);
+        }
+      });
+      tr.appendChild(tdNome);
+
+      // Percorre os 14 dias
+      datas.forEach((data, i) => {
+        const diaSemana = data.getDay(); // 0 = Domingo, 6 = Sábado
+        const chavePonto = `${nomeFuncionario}_${i}`; // Chave de ponto dentro do objeto 'pontos' da semana
+        const td = document.createElement('td');
+
+        if (diaSemana === 6) { // sábado = folga fixa
+          td.textContent = 'Folga Fixa';
+          td.classList.add('folga-fixa');
+        } else {
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.classList.add('checkbox');
+          
+          const select = document.createElement('select');
+          select.className = 'folga-box';
+          select.innerHTML = `
+            <option value="">✔</option>
+            <option value="Folga">Folga</option>
+            <option value="Atestado">Atestado</option>
+            <option value="Falta">Falta</option>
+          `;
+          
+          // Carrega o estado atual para o dia
+          const tipoSalvo = pontosDestaSemana[chavePonto + '_tipo'] || '';
+          const isCheckedSalvo = pontosDestaSemana[chavePonto] || false;
+
+          if (tipoSalvo !== '') {
+              select.value = tipoSalvo;
+              checkbox.classList.add('hidden'); // Oculta a checkbox se o tipo está selecionado
+              td.textContent = tipoSalvo; // Exibe o tipo no TD
+              td.classList.add(tipoSalvo.toLowerCase());
+          } else {
+              checkbox.checked = isCheckedSalvo;
+              if (isCheckedSalvo) {
+                  select.classList.add('hidden'); // Oculta o select se a checkbox está marcada
+                  td.classList.add('marcado');
+              }
+          }
+          
+          // Adiciona os elementos ao TD
+          td.appendChild(checkbox);
+          td.appendChild(document.createElement('br')); // Linha para separar checkbox e select
+          td.appendChild(select);
+
+          // Event Listener para a checkbox
+          checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+              pontosDestaSemana[chavePonto] = true;
+              delete pontosDestaSemana[chavePonto + '_tipo']; // Remove o tipo salvo
+              select.value = ''; // Reseta o valor do select
+              select.classList.add('hidden'); // Oculta o select
+            } else {
+              delete pontosDestaSemana[chavePonto]; // Remove a marcação
+              select.classList.remove('hidden'); // Mostra o select
+            }
+            estadoAtualSemana.pontos = pontosDestaSemana;
+            salvarEstadoSemana(turnoAtual, periodoAtual, estadoAtualSemana); // AGORA PASSA O TURNO
+            atualizarTabela(); // Re-renderiza para atualizar classes e valores
+          });
+
+          // Event Listener para o select
+          select.addEventListener('change', () => {
+            const novoTipo = select.value;
+            if (novoTipo !== '') {
+              pontosDestaSemana[chavePonto + '_tipo'] = novoTipo;
+              delete pontosDestaSemana[chavePonto]; // Remove a marcação do checkbox
+              checkbox.checked = false; // Desmarca a checkbox
+              checkbox.classList.add('hidden'); // Oculta a checkbox
+            } else {
+              delete pontosDestaSemana[chavePonto + '_tipo']; // Remove o tipo salvo
+              checkbox.classList.remove('hidden'); // Mostra a checkbox
+            }
+            estadoAtualSemana.pontos = pontosDestaSemana;
+            salvarEstadoSemana(turnoAtual, periodoAtual, estadoAtualSemana); // AGORA PASSA O TURNO
+            atualizarTabela(); // Re-renderiza para atualizar classes e valores
+          });
+        }
+        tr.appendChild(td);
+      });
+
+      // Recalcula o valor final para a exibição na tabela
+      let currentTotalMarcado = 0;
+      let currentFaltaMarcada = false;
+      datas.forEach((data, i) => {
+        const diaSemana = data.getDay();
+        if (diaSemana !== 6) { // Apenas dias não fixos de folga
+            const chavePonto = `${nomeFuncionario}_${i}`;
+            const tipo = pontosDestaSemana[chavePonto + '_tipo'] || ''; // Pega o tipo do dropdown
+            const isChecked = pontosDestaSemana[chavePonto] || false; // Pega o estado do checkbox
+
+            if (tipo === 'Falta') {
+                currentFaltaMarcada = true;
+            } else if (isChecked && tipo === '') { // Só conta se o checkbox estiver marcado e nenhum tipo especial for selecionado
+                currentTotalMarcado++;
+            }
+        }
+      });
+
+      const tdValor = document.createElement('td');
+      const valorFinal = currentFaltaMarcada ? currentTotalMarcado * 90 : currentTotalMarcado * 120;
+      tdValor.textContent = `R$ ${valorFinal.toFixed(2).replace('.', ',')}`;
+      tr.appendChild(tdValor);
+
+      tbody.appendChild(tr);
+    });
+    popularRemoverFuncionarioSelect(funcionariosDestaSemana); // Atualiza a lista de remover funcionários com base na lista atual
+  }
+
+  // Modal functions
+  function abrirModal(nomeFuncionario) {
+    funcionarioModalNome = nomeFuncionario;
+    const dados = carregarDadosFuncionarioModal(turnoAtual, nomeFuncionario); // AGORA PASSA O TURNO
+
+    // Recalcula o valor final atual da tabela para este funcionário no momento de abrir o modal
+    const estadoAtualSemana = carregarEstadoSemana(turnoAtual, periodoAtual); // AGORA PASSA O TURNO
+    const pontosDestaSemana = estadoAtualSemana.pontos;
+    let total = 0;
+    let falta = false;
+    const datas = calcularDatasSemana(periodoAtual);
+    
+    datas.forEach((data, i) => {
+        const diaSemana = data.getDay();
+        if (diaSemana !== 6) {
+            const chavePonto = `${nomeFuncionario}_${i}`;
+            const tipo = pontosDestaSemana[chavePonto + '_tipo'] || ''; // Pega o tipo do dropdown
+            const isChecked = pontosDestaSemana[chavePonto] || false; // Pega o estado do checkbox
+
+            if (tipo === 'Falta') falta = true;
+            if (isChecked && tipo === '') total++; // Conta os presentes (marcados pelo checkbox)
+        }
+    });
+
+    const valorFinalCalculado = falta ? total * 90 : total * 120;
+
+    pixKeyInput.value = dados.pixKey || '';
+    bankNameInput.value = dados.bankName || '';
+    totalValueInput.value = valorFinalCalculado.toFixed(2);
+
+    modalOverlay.classList.add('active');
+    pixKeyInput.focus();
+  }
+
+  function fecharModal() {
+    modalOverlay.classList.remove('active');
+    funcionarioModalNome = null;
+  }
+
+  modalForm.addEventListener('submit', e => {
+    e.preventDefault();
+    if (funcionarioModalNome === null) return;
+    const pixKey = pixKeyInput.value.trim();
+    const bankName = bankNameInput.value.trim();
+    const totalValue = parseFloat(totalValueInput.value);
+
+    if (!pixKey || !bankName || isNaN(totalValue)) {
+      showToast('Preencha todos os campos corretamente do PIX/Banco.', 'error');
+      return;
+    }
+
+    salvarDadosFuncionarioModal(turnoAtual, funcionarioModalNome, { pixKey, bankName, totalValue }); // AGORA PASSA O TURNO
+    showToast(`Dados de ${funcionarioModalNome} salvos com sucesso!`, 'success');
+    fecharModal();
+  });
+
+  document.getElementById('btnCancel').addEventListener('click', fecharModal);
+  modalOverlay.addEventListener('click', e => {
+    if (e.target === modalOverlay) fecharModal();
+  });
+
+  // Funções de gerenciamento de funcionários
+  function popularRemoverFuncionarioSelect(funcionariosLista) {
+    removerFuncionarioSelect.innerHTML = '';
+    if (funcionariosLista.length === 0) {
+        const option = document.createElement('option');
+        option.value = "";
+        option.textContent = "Nenhum funcionário para remover";
+        option.disabled = true;
+        option.selected = true;
+        removerFuncionarioSelect.appendChild(option);
+        removeFuncionarioBtn.disabled = true;
+    } else {
+        removeFuncionarioBtn.disabled = false;
+        funcionariosLista.forEach((nome) => {
+            const option = document.createElement('option');
+            option.value = nome;
+            option.textContent = nome;
+            removerFuncionarioSelect.appendChild(option);
+        });
+    }
+  }
+
+  addFuncionarioBtn.addEventListener('click', () => {
+    const novoNome = novoFuncionarioNomeInput.value.trim();
+    if (!novoNome) {
+      showToast('Por favor, digite um nome para adicionar.', 'error');
+      return;
+    }
+
+    const currentPeriodNum = parseInt(periodoAtual.replace('semana', ''));
+    const totalPeriodos = periodoSelect.options.length;
+
+    let addedToAnyWeek = false;
+
+    // Percorre todas as semanas a partir da atual e adiciona o funcionário
+    for (let i = currentPeriodNum; i <= totalPeriodos; i++) {
+        const semanaChave = `semana${i}`;
+        const estadoSemana = carregarEstadoSemana(turnoAtual, semanaChave); // AGORA PASSA O TURNO
+        if (!estadoSemana.funcionarios.includes(novoNome)) {
+            estadoSemana.funcionarios.push(novoNome);
+            estadoSemana.funcionarios.sort((a, b) => a.localeCompare(b)); // Opcional: manter lista ordenada
+            salvarEstadoSemana(turnoAtual, semanaChave, estadoSemana); // AGORA PASSA O TURNO
+            addedToAnyWeek = true;
+        }
+    }
+
+    if (addedToAnyWeek) {
+        showToast(`Funcionário "${novoNome}" adicionado a partir da ${periodoAtual} no ${turnoSelect.options[turnoSelect.selectedIndex].text}.`, 'success');
+        novoFuncionarioNomeInput.value = '';
+        atualizarTabela(); // Re-renderiza a tabela para refletir a mudança
+    } else {
+        showToast(`Funcionário "${novoNome}" já existe em todas as semanas futuras deste turno.`, 'info');
+    }
+  });
+
+  removeFuncionarioBtn.addEventListener('click', () => {
+    const nomeParaRemover = removerFuncionarioSelect.value;
+    if (!nomeParaRemover) {
+      showToast('Selecione um funcionário para remover.', 'error');
+      return;
+    }
+
+    const currentPeriodNum = parseInt(periodoAtual.replace('semana', ''));
+    const totalPeriodos = periodoSelect.options.length;
+
+    let removedFromAnyWeek = false;
+
+    // Percorre todas as semanas a partir da atual e remove o funcionário
+    for (let i = currentPeriodNum; i <= totalPeriodos; i++) {
+        const semanaChave = `semana${i}`;
+        const estadoSemana = carregarEstadoSemana(turnoAtual, semanaChave); // AGORA PASSA O TURNO
+        const indexParaRemover = estadoSemana.funcionarios.indexOf(nomeParaRemover);
+        if (indexParaRemover > -1) {
+            estadoSemana.funcionarios.splice(indexParaRemover, 1);
+            salvarEstadoSemana(turnoAtual, semanaChave, estadoSemana); // AGORA PASSA O TURNO
+            removedFromAnyWeek = true;
+        }
+    }
+
+    // Remove os dados globais de PIX/Banco PARA ESTE TURNO, pois esses não são específicos de uma semana
+    removerDadosFuncionarioModal(turnoAtual, nomeParaRemover); // AGORA PASSA O TURNO
+
+    if (removedFromAnyWeek) {
+        showToast(`Funcionário "${nomeParaRemover}" removido a partir da ${periodoAtual} do ${turnoSelect.options[turnoSelect.selectedIndex].text}.`, 'success');
+        atualizarTabela(); // Re-renderiza a tabela
+    } else {
+        showToast(`Funcionário "${nomeParaRemover}" não encontrado para remoção a partir desta semana neste turno.`, 'info');
+    }
+  });
+
+  // Função para exportar para Excel
+  exportExcelBtn.addEventListener('click', () => {
+    const estadoAtualSemana = carregarEstadoSemana(turnoAtual, periodoAtual); // AGORA PASSA O TURNO
+    const funcionariosDestaSemana = estadoAtualSemana.funcionarios;
+    const pontosDestaSemana = estadoAtualSemana.pontos;
+    const datas = calcularDatasSemana(periodoAtual);
+
+    const periodoTextoCompleto = periodoSelect.options[periodoSelect.selectedIndex].text;
+    const [semanaLabel, datasLabel] = periodoTextoCompleto.split(' (');
+    const datasLabelFormatado = datasLabel.replace(')', '').replace(/ /g, '.'); // Ex: 09.06.2025.a.22.06.2025
+    const turnoNomeArquivo = turnoSelect.options[turnoSelect.selectedIndex].text.replace(/ /g, '_');
+
+
+    const ws_data = [];
+    const headers = [];
+
+    // Adiciona o título principal da planilha
+    ws_data.push([`Ponto MBK - ${turnoSelect.options[turnoSelect.selectedIndex].text} - ${periodoTextoCompleto}`]);
+
+    // Adiciona o cabeçalho das colunas
+    headers.push("Funcionário");
+    datas.forEach(data => headers.push(formatarData(data)));
+    headers.push("Valor a se pagar");
+    ws_data.push(headers);
+
+    // Adiciona os dados das linhas
+    funcionariosDestaSemana.forEach((nomeFuncionario) => {
+      const row = [nomeFuncionario];
+      let totalMarcado = 0;
+      let faltaMarcada = false;
+
+      datas.forEach((data, i) => {
+        const diaSemana = data.getDay();
+        const chavePonto = `${nomeFuncionario}_${i}`;
+        const tipo = pontosDestaSemana[chavePonto + '_tipo'] || '';
+        const isChecked = pontosDestaSemana[chavePonto] || false;
+
+        if (diaSemana === 6) { // Sábado (Folga Fixa)
+          row.push("Folga Fixa");
+        } else if (tipo !== '') {
+          row.push(tipo);
+          if (tipo === 'Falta') faltaMarcada = true;
+        } else if (isChecked) {
+          row.push("Presente");
+          totalMarcado++;
+        } else {
+          row.push(""); // Célula vazia se não marcado e não for tipo especial
+        }
+      });
+
+      const valorFinal = faltaMarcada ? totalMarcado * 90 : totalMarcado * 120;
+      row.push(`R$ ${valorFinal.toFixed(2).replace('.', ',')}`);
+      ws_data.push(row);
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+    // Define o estilo para o título (linha 1) e cabeçalhos (linha 2)
+    // Mescla a primeira célula do título principal em todas as colunas
+    const numCols = headers.length;
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: numCols - 1 } }];
+    ws['A1'].s = { font: { sz: 14, bold: true }, alignment: { horizontal: "center" } }; // Estilo para o título
+
+    // Estilo para o cabeçalho das colunas (linha 2)
+    for (let c = 0; c < numCols; c++) {
+        const cellRef = XLSX.utils.encode_cell({ r: 1, c: c });
+        if (!ws[cellRef]) ws[cellRef] = {};
+        ws[cellRef].s = {
+            font: { bold: true, color: { rgb: "FFFFFF" } }, // Branco
+            fill: { fgColor: { rgb: "2980B9" } }, // Azul
+            alignment: { horizontal: "center", vertical: "center" },
+            border: {
+                top: { style: "thin", color: { auto: 1 } },
+                bottom: { style: "thin", color: { auto: 1 } },
+                left: { style: "thin", color: { auto: 1 } },
+                right: { style: "thin", color: { auto: 1 } }
+            }
+        };
+    }
+
+    // Estilo para a coluna "Funcionário" e "Valor a se pagar" (e outras colunas de dados)
+    // Para todas as linhas de dados (começando da linha 3, r=2)
+    for (let r = 2; r < ws_data.length; r++) {
+        // Coluna "Funcionário"
+        const funcCellRef = XLSX.utils.encode_cell({ r: r, c: 0 });
+        if (!ws[funcCellRef]) ws[funcCellRef] = {};
+        ws[funcCellRef].s = {
+            font: { bold: true, color: { rgb: "2980B9" } }, // Azul
+            alignment: { horizontal: "left" },
+            fill: { fgColor: { rgb: "ECF0F1" } }, // Cinza claro
+            border: {
+                top: { style: "thin", color: { auto: 1 } },
+                bottom: { style: "thin", color: { auto: 1 } },
+                left: { style: "thin", color: { auto: 1 } },
+                right: { style: "medium", color: { rgb: "2980B9" } } // Borda direita mais grossa
+            }
+        };
+
+        // Colunas de "Ponto" e "Valor a se pagar"
+        for (let c = 1; c < numCols; c++) {
+            const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
+            if (!ws[cellRef]) ws[cellRef] = {};
+            const cellValue = ws_data[r][c]; // Valor do dado, não o valor da célula formatada
+
+            let cellStyle = {
+                alignment: { horizontal: "center", vertical: "center" },
+                border: {
+                    top: { style: "thin", color: { auto: 1 } },
+                    bottom: { style: "thin", color: { auto: 1 } },
+                    left: { style: "thin", color: { auto: 1 } },
+                    right: { style: "thin", color: { auto: 1 } }
+                }
+            };
+
+            switch (cellValue) {
+                case "Folga Fixa":
+                case "Folga":
+                    cellStyle.fill = { fgColor: { rgb: "95A5A6" } }; // Cinza
+                    cellStyle.font = { color: { rgb: "FFFFFF" }, bold: true };
+                    break;
+                case "Presente":
+                    cellStyle.fill = { fgColor: { rgb: "27AE60" } }; // Verde
+                    cellStyle.font = { color: { rgb: "FFFFFF" }, bold: true };
+                    break;
+                case "Atestado":
+                    cellStyle.fill = { fgColor: { rgb: "F1C40F" } }; // Amarelo
+                    cellStyle.font = { color: { rgb: "222222" }, bold: true };
+                    break;
+                case "Falta":
+                    cellStyle.fill = { fgColor: { rgb: "C0392B" } }; // Vermelho
+                    cellStyle.font = { color: { rgb: "FFFFFF" }, bold: true };
+                    break;
+                default:
+                    // Verifica se é a coluna "Valor a se pagar"
+                    if (c === numCols - 1) { // Última coluna
+                        cellStyle.font = { bold: true };
+                        cellStyle.alignment = { horizontal: "center" };
+                    }
+                    break;
+            }
+            ws[cellRef].s = cellStyle;
+        }
+    }
+
+    // Ajusta a largura das colunas
+    const wscols = [
+      { wch: 25 }, // Funcionário
+      ...Array(14).fill({ wch: 10 }), // 14 dias
+      { wch: 15 } // Valor a se pagar
+    ];
+    ws['!cols'] = wscols;
+
+    XLSX.utils.book_append_sheet(wb, ws, "Ponto MBK");
+    XLSX.writeFile(wb, `Ponto_MBK_${turnoNomeArquivo}_${datasLabelFormatado}.xlsx`);
+    showToast('Tabela exportada para Excel!', 'success');
+  });
+
+  // Event listeners para mudança de período e de turno
+  periodoSelect.addEventListener('change', atualizarTabela);
+  turnoSelect.addEventListener('change', () => {
+    localStorage.setItem('ultimoTurnoSelecionado', turnoSelect.value); // Salva o turno selecionado
+    atualizarTabela(); // Atualiza a tabela quando o turno muda
+  });
+
+
+  // Inicialização
+  gerarPeriodos();
+
+  // Tenta selecionar o último turno e período salvos
+  const ultimoTurnoSalvo = localStorage.getItem('ultimoTurnoSelecionado');
+  if (ultimoTurnoSalvo && document.querySelector(`#turnoSelect option[value="${ultimoTurnoSalvo}"]`)) {
+      turnoSelect.value = ultimoTurnoSalvo;
+  } else {
+      // Se não houver turno salvo, ou o salvo não existir, define o 3º turno como padrão
+      turnoSelect.value = 'MBK3'; 
+  }
+
+  const ultimaSemanaSalva = localStorage.getItem('ultimaSemanaSelecionada');
+  if (ultimaSemanaSalva && document.querySelector(`#periodo option[value="${ultimaSemanaSalva}"]`)) {
+      periodoSelect.value = ultimaSemanaSalva;
+  } else if (periodoSelect.options.length > 0) {
+      // Se não houver última semana salva ou ela não existir, selecione a última opção (mais recente)
+      periodoSelect.value = periodoSelect.options[periodoSelect.options.length - 1].value;
+  }
+
+  // Adiciona um listener para salvar o período selecionado
+  periodoSelect.addEventListener('change', () => {
+      localStorage.setItem('ultimaSemanaSelecionada', periodoSelect.value);
+  });
+
+  atualizarTabela(); // Renderiza a tabela inicial com base nas seleções (ou padrões)
+</script>
+</body>
+</html>
